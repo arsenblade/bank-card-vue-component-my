@@ -1,20 +1,19 @@
+import {maxLengthValueInFields} from "../consts/max-length-value-fields";
+
 export default {
     methods: {
-        /**
-         * Check is field empty
-         * @param { String } fieldRefName - Ref name of field element
-         * @returns { Boolean }
-         */
-        isFieldEmpty(fieldRefName) {
-            return !this.$v[fieldRefName].required;
-        },
         /**
          * Check is field full
          * @param { String } fieldRefName - Ref name of field element
          * @returns { Boolean }
          */
-        isFieldFull(fieldRefName) {
-            return this.$v[fieldRefName].length;
+        isFieldFull(type, value) {
+            if(!value) return false
+
+            const currentValueLength = value.split(' ').join('').length;
+            const typeFieldValueLength = maxLengthValueInFields[type]
+
+            return currentValueLength === typeFieldValueLength
         },
         /**
          * Get index of item in array

@@ -52,10 +52,11 @@
 <script>
 import CardInfo from "@/services/card-info";
 
-import VueBankCardBase from "./VueBankCardBase";
+import {defineComponent} from "vue";
+import VueBankCardBase from "./VueBankCardBase.vue";
 import VueBankCardSmall from "./VueBankCardSmall";
 
-export default {
+export default defineComponent({
     name: "VueBankCard",
     components: {
         VueBankCardBase,
@@ -149,7 +150,7 @@ export default {
             }
         }
     }
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -161,11 +162,11 @@ $font-path: "https://cdn.jsdelivr.net/gh/noppa/text-security@master/dist/";
     font-family: "text-security-disc";
     src: url("#{$font-path}text-security-disc.eot");
     src: url("#{$font-path}text-security-disc.eot?#iefix")
-            format("embedded-opentype"),
-        url("#{$font-path}text-security-disc.woff2") format("woff2"),
-        url("#{$font-path}text-security-disc.woff") format("woff"),
-        url("#{$font-path}text-security-disc.ttf") format("truetype"),
-        url("#{$font-path}text-security-disc.svg#text-security") format("svg");
+    format("embedded-opentype"),
+    url("#{$font-path}text-security-disc.woff2") format("woff2"),
+    url("#{$font-path}text-security-disc.woff") format("woff"),
+    url("#{$font-path}text-security-disc.ttf") format("truetype"),
+    url("#{$font-path}text-security-disc.svg#text-security") format("svg");
 }
 
 .vue-bank-card__wrapper {

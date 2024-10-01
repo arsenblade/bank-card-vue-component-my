@@ -32,7 +32,7 @@
         >
             <VueBankCardTooltip
                 position="left"
-                :is-show="!!errorFiltered('cardNumber')"
+                :is-show="Boolean(errorFiltered('cardNumber'))"
             >
                 {{ errorFiltered("cardNumber") }}
             </VueBankCardTooltip>
@@ -40,7 +40,7 @@
             <div class="card__main-inner">
                 <div :class="cardNumberCssClasses">
                     <label
-                        v-if="isLabelInputShow && $v.cardNumber.length"
+                        v-if="isLabelInputShow && isFieldFull('cardNumber', localCardNumber)"
                         data-test-label-field-number
                         class="card__field-label"
                         :for="generateId('cardNumber')"
@@ -60,16 +60,17 @@
                         inputmode="numeric"
                         ref="cardNumber"
                         :placeholder="textPlaceholderInput"
-                        v-mask="cardNumberMask"
-                        :value="cardNumber"
+                        v-bind="localCardNumberAttrs"
+                        v-maska
+                        :data-maska="cardInfo.numberMask"
+                        v-model="localCardNumber"
                         :id="generateId('cardNumber')"
                         :readonly="!isNew"
                         @input="onInput($event, 'cardNumber')"
-                        @focus="onFocus($event, 'cardNumber')"
+                        @focus="onFocusField('localCardNumber')"
+                        @keydown.delete="onDel($event, 'cardNumber')"
                         @focusout="leaveFromCardNumber"
                         @blur="onBlur($event, 'cardNumber')"
-                        @keydown.delete="onDel($event, 'cardNumber')"
-                        @keydown.enter="onCardNumberEnter"
                     />
 
                     <span
@@ -90,9 +91,7 @@
 
                     <VueBankCardTooltip
                         position="left"
-                        :is-show="
-                            $v.cardNumber.$error && $v.cardNumber.required
-                        "
+                        :is-show="localErrors.localCardNumber"
                     >
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
@@ -124,19 +123,21 @@
                             pattern="[0-9]{2}"
                             maxlength="2"
                             inputmode="numeric"
-                            v-mask="expDateMonthMask"
-                            :value="expDateMonth"
+                            v-bind="localExpDateMonthAttrs"
+                            data-maska="##"
+                            v-model="localExpDateMonth"
+                            v-maska
                             :id="generateId('expDateMonth')"
                             @input="onInput($event, 'expDateMonth')"
-                            @focus="onFocus($event, 'expDateMonth')"
+                            @focus="onFocusField('localExpDateMonthAttrs')"
                             @blur="onBlur($event, 'expDateMonth')"
                             @keydown.delete="onDel($event, 'expDateMonth')"
                         />
 
                         <span
                             v-show="
-                                isFieldFull('expDateMonth') ||
-                                    isFieldFull('expDateYear')
+                                isFieldFull('expDateMonth', localExpDateMonth) ||
+                                    isFieldFull('expDateYear', localExpDateYear)
                             "
                             class="card__field-divider"
                         >
@@ -152,10 +153,12 @@
                             pattern="[0-9]{2}"
                             maxlength="2"
                             inputmode="numeric"
-                            v-mask="expDateYearMask"
-                            :value="expDateYear"
+                            v-bind="localExpDateYearAttrs"
+                            v-maska
+                            data-maska="##"
+                            v-model="localExpDateYear"
                             @input="onInput($event, 'expDateYear')"
-                            @focus="onFocus($event, 'expDateYear')"
+                            @focus="onFocusField('localExpDateYear')"
                             @blur="onBlur($event, 'expDateYear')"
                             @keydown.delete="onDel($event, 'expDateYear')"
                         />
@@ -164,7 +167,7 @@
                     <VueBankCardTooltip
                         position="right"
                         :is-show="
-                            $v.expDateMonth.$error || $v.expDateYear.$error
+                            localErrors.localExpDateMonth || localErrors.localExpDateYear
                         "
                     >
                         Введите дату в формате ММ/ГГ как на карте
@@ -178,7 +181,7 @@
                     >
                         {{
                             errorFiltered("expDateMonth") ||
-                                errorFiltered("expDateYear")
+                            errorFiltered("expDateYear")
                         }}
                     </VueBankCardTooltip>
                 </div>
@@ -195,17 +198,18 @@
                         data-cp="cvv"
                         autocomplete="cc-csc"
                         inputmode="numeric"
-                        v-mask="cvvMask"
-                        :value="cvv"
+                        v-bind="localCvvAttrs"
+                        v-maska
+                        :data-maska="cvvMask"
+                        v-model="localCvv"
                         :id="generateId('cvv')"
                         @input="onInput($event, 'cvv')"
-                        @focus="onFocus($event, 'cvv')"
-                        @blur="onBlur($event, 'cvv')"
+                        @focus="onFocusField('localCvv')"
                         @keydown.delete="onDel($event, 'cvv')"
                     />
 
                     <VueBankCardTooltip
-                        :is-show="$v.cvv.$error"
+                        :is-show="localErrors.localCvv"
                         position="right"
                     >
                         Вам нужно заполнить это поле
@@ -231,22 +235,21 @@
 </template>
 
 <script>
-import { mask } from "vue-the-mask";
-import { validationMixin } from "vuelidate";
-
-import { commonMixin, validatorsMixin, helpersMixin } from "@/mixins";
+import { commonMixin, helpersMixin } from "@/mixins";
 import clickOutside from "@/utils/click-outside-directive";
 import VueBankCardTooltip from "./VueBankCardTooltip";
 import VueBankCardSmallBtnDel from "@/components/VueBankCardSmallBtnDel";
+import {computed, defineComponent, watch} from "vue";
+import {useValidation} from "./useValidation";
 
-export default {
+export default defineComponent({
     name: "VueBankCardSmall",
     components: {
         VueBankCardSmallBtnDel,
         VueBankCardTooltip
     },
-    directives: { mask, clickOutside },
-    mixins: [commonMixin, validationMixin, validatorsMixin, helpersMixin],
+    directives: { clickOutside },
+    mixins: [commonMixin, helpersMixin],
     data() {
         return {
             cardFocused: false,
@@ -260,20 +263,82 @@ export default {
             ]
         };
     },
+    setup(props) {
+        const {
+            values,
+            localErrors,
+            handleSubmit,
+            setFieldError,
+            resetForm,
+            localCardNumber,
+            localCardNumberAttrs,
+            localCvv,
+            localCvvAttrs,
+            localExpDateMonth,
+            localExpDateMonthAttrs,
+            localExpDateYear,
+            localExpDateYearAttrs,
+        } = useValidation(props);
+
+        const onFocusField = (field) => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setFieldError(field, '');
+                })
+            })
+        };
+
+        function onReset() {
+            resetForm();
+        }
+        watch(() => props.isReset, () => {
+            onReset()
+        })
+
+        const cvvMask = computed(() => {
+            let mask = "";
+            const maskSymbol = "#";
+            const codeLength = props.cardInfo.codeLength || 3;
+
+            for (let i = 0; i < codeLength; i++) {
+                mask += maskSymbol;
+            }
+
+            return mask;
+        })
+
+        return {
+            values,
+            localErrors,
+            handleSubmit,
+            setFieldError,
+            resetForm,
+            localCardNumber,
+            localCardNumberAttrs,
+            localCvv,
+            localCvvAttrs,
+            localExpDateMonth,
+            localExpDateMonthAttrs,
+            localExpDateYear,
+            localExpDateYearAttrs,
+            onFocusField,
+            cvvMask,
+        }
+    },
     computed: {
         /**
          * Condition for show or don't show a label
          * @return {string}
          */
         isLabelInputShow() {
-            return this.isNew && !this.isFieldEmpty("cardNumber");
+            return this.isNew && this.localCardNumber;
         },
         /**
          * Text for placeholder
          * @return {string}
          */
         textPlaceholderInput() {
-            if (!this.cardFocused && this.isFieldEmpty("cardNumber")) {
+            if (!this.cardFocused && !this.localCardNumber) {
                 return "Новая карта";
             }
             return "Номер карты";
@@ -290,8 +355,8 @@ export default {
             const dynamicPath = bankName
                 ? bankLogoSm
                 : brandName
-                ? brandLogo
-                : cardIcon;
+                    ? brandLogo
+                    : cardIcon;
 
             return this.imagesBasePath + dynamicPath;
         },
@@ -306,12 +371,11 @@ export default {
                 { "card__number--collapsed": this.cardNumberCollapsed },
                 {
                     "card__field-wrapper--focused":
-                        !this.isFieldEmpty("cardNumber") && this.isNew
+                        this.localCardNumber && this.isNew
                 },
                 {
                     "card__field-wrapper--invalid":
-                        (this.$v.cardNumber.$error &&
-                            this.$v.cardNumber.required) ||
+                        (this.localErrors.localCardNumber) ||
                         !!this.errorFiltered("cardNumber")
                 },
                 { "card-number_input": !this.cardNumberCollapsed }
@@ -328,13 +392,13 @@ export default {
                 { "card__field-wrapper--hidden": !this.cardNumberCollapsed },
                 {
                     "card__field-wrapper--focused":
-                        !this.isFieldEmpty("expDateMonth") ||
-                        !this.isFieldEmpty("expDateYear")
+                        this.localExpDateMonth ||
+                        this.localExpDateYear
                 },
                 {
                     "card__field-wrapper--invalid":
-                        this.$v.expDateMonth.$error ||
-                        this.$v.expDateYear.$error ||
+                        this.localErrors.localExpDateMonth ||
+                        this.localErrors.localExpDateYear ||
                         !!this.errorFiltered("expDateMonth") ||
                         !!this.errorFiltered("expDateYear")
                 }
@@ -350,16 +414,16 @@ export default {
                 "card__field-wrapper",
                 "card__field-wrapper--secured",
                 { "card__field-wrapper--hidden": !this.cardNumberCollapsed },
-                { "card__field-wrapper--focused": !this.isFieldEmpty("cvv") },
+                { "card__field-wrapper--focused": this.localCvv },
                 {
                     "card__field-wrapper--invalid":
-                        this.$v.cvv.$error || !!this.errorFiltered("cvv")
+                        this.localErrors.localCvv || !!this.errorFiltered("cvv")
                 }
             ];
         },
         displayNextStep() {
             return (
-                this.$v.cardNumber.length &&
+                this.isFieldFull('cardNumber', this.localCardNumber) &&
                 this.isNew &&
                 !this.cardNumberCollapsed &&
                 this.cardFocused
@@ -369,12 +433,7 @@ export default {
             return this.imagesBasePath + "next-step.svg";
         },
         invalidSomeElement() {
-            return (
-                (this.$v.cardNumber.$error && this.$v.cardNumber.required) ||
-                this.$v.expDateMonth.$error ||
-                this.$v.expDateYear.$error ||
-                this.$v.cvv.$error
-            );
+            return Object.keys(this.localErrors).length !== 0;
         },
         outsideErrors() {
             return Object.keys(this.errors).length > 0;
@@ -394,15 +453,13 @@ export default {
         onFocusCard(e) {
             this.cardFocused = true;
             if (this.isNew) {
-                if (!this.cardNumber) {
-                    if (e.target.className !== "card__field") {
-                        for (let i = 0; i < this.fields.length; i++) {
-                            const ref = this.fields[i].ref;
+                if (e.target.className !== "card__field") {
+                    for (let i = 0; i < this.fields.length; i++) {
+                        const ref = this.fields[i].ref;
 
-                            if (!this.isFieldFull(ref)) {
-                                this.focusOnField(ref);
-                                break;
-                            }
+                        if (!this.isFieldFull(ref, this[ref])) {
+                            this.focusOnField(ref);
+                            break;
                         }
                     }
                 }
@@ -413,7 +470,7 @@ export default {
          */
         onBlurCard() {
             this.cardFocused = false;
-            if (this.isFieldFull("cardNumber")) this.cardNumberCollapsed = true;
+            if (this.isFieldFull("cardNumber", this.localCardNumber)) this.cardNumberCollapsed = true;
         },
         /**
          * Handle click on collapsed number
@@ -430,17 +487,16 @@ export default {
          * @returns { String }
          */
         generateId(id) {
-            return `${id}-${this._uid}`;
+            return `${id}`;
         },
         /**
          * Card number handler on enter
          */
         onCardNumberEnter() {
             const name = "cardNumber";
-
-            if (this.isFieldFull(name)) {
+            if (this.isFieldFull('cardNumber', this.localCardNumber)) {
                 this.cardNumberCollapsed = true;
-                this.moveCaretTo("forward", name);
+                this.moveCaretTo("forward", name, this.localCardNumber);
             }
         },
         leaveFromCardNumber() {
@@ -449,7 +505,7 @@ export default {
             }
         }
     }
-};
+});
 </script>
 
 <style lang="scss" scoped>
