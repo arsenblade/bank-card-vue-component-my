@@ -31,6 +31,10 @@ export default {
             type: String,
             required: true,
         },
+        isYearValidation: {
+            type: Boolean,
+            default: true,
+        },
         errors: Object,
         isReset: Boolean,
         isFocus: Boolean,
