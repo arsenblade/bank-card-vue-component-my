@@ -56,7 +56,7 @@ export default {
          * @returns { String }
          */
         numberCollapsed() {
-            const cardNumber = this.cardNumber.split(' ').join('')
+            const cardNumber = this.cardNumber.replace(/\s+/g, '');
             if (cardNumber.length >= maxLengthValueInFields.cardNumber) {
                 return this.cardNumber.slice(-4);
             } else {

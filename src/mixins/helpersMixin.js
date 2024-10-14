@@ -10,7 +10,7 @@ export default {
         isFieldFull(type, value) {
             if(!value) return false
 
-            const currentValueLength = value.split(' ').join('').length;
+            const currentValueLength = value.replace(/\s+/g, '').length;
             const typeFieldValueLength = maxLengthValueInFields[type]
 
             return currentValueLength === typeFieldValueLength
