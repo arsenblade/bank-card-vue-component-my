@@ -86,7 +86,6 @@ export default {
                 const field = e.target.dataset.cp;
                 const value = "0" + e.target.value;
 
-                this[field] = value;
                 this.$emit(`input-${camelToKebab(field)}`, value);
             }
         },

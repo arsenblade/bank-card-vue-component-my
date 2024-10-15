@@ -308,7 +308,6 @@ export default defineComponent({
         return {
             values,
             localErrors,
-            handleSubmit,
             setFieldError,
             resetForm,
             localCardNumber,

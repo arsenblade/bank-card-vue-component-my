@@ -1,7 +1,7 @@
 import {useForm} from "vee-validate";
 import {toTypedSchema} from "@vee-validate/yup";
 import {object, string} from "yup";
-import {computed} from "vue";
+import {computed, watch} from "vue";
 
 const currentYY = computed(() => {
     const date = new Date();
@@ -80,6 +80,22 @@ export const useValidation = (props) => {
     const [localCvv, localCvvAttrs] = defineField('localCvv', {
         validateOnModelUpdate: false,
     });
+
+    watch(() => props.cardNumber, (newValue) => {
+        localCardNumber.value = newValue
+    }, {immediate: true})
+
+    watch(() => props.expDateMonth, (newValue) => {
+        localExpDateMonth.value = newValue
+    }, {immediate: true})
+
+    watch(() => props.expDateYear, (newValue) => {
+        localExpDateYear.value = newValue
+    }, {immediate: true})
+
+    watch(() => props.cvv, (newValue) => {
+        localCvv.value = newValue
+    }, {immediate: true})
 
     return {
         values,
