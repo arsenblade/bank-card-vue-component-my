@@ -78,6 +78,7 @@
                         :readonly="!isNew"
                         @input="onInput($event, 'cardNumber')"
                         @focus="onFocusField('localCardNumber')"
+                        @blur="onBlurField('localCardNumber')"
                         @keydown.delete="onDel($event, 'cardNumber')"
                         @keydown.enter="onEnter"
                     />
@@ -136,7 +137,7 @@
                                 class="card__field card__field--extra"
                                 @input="onInput($event, 'expDateMonth')"
                                 @focus="onFocusField('localExpDateMonthAttrs')"
-                                @blur="autocompleteDate($event, 'localExpDateMonth')"
+                                @blur="onBlurDateField($event, 'localExpDateMonth')"
                                 @keydown.delete="onDel($event, 'expDateMonth')"
                                 @keydown.enter="onEnter"
                             />
@@ -167,7 +168,7 @@
                                 class="card__field card__field--extra"
                                 @input="onInput($event, 'expDateYear')"
                                 @focus="onFocusField('localExpDateYear')"
-                                @blur="autocompleteDate($event, 'localExpDateYear')"
+                                @blur="onBlurDateField($event, 'localExpDateYear')"
                                 @keydown.delete="onDel($event, 'expDateYear')"
                                 @keydown.enter="onEnter"
                             />
@@ -213,6 +214,7 @@
                         class="card__field card__field--secured card__field--extra"
                         @input="onInput($event, 'cvv')"
                         @focus="onFocusField('localCvv')"
+                        @blur="onBlurField('localCvv')"
                         @keydown.delete="onDel($event, 'cvv')"
                         @keydown.enter="onEnter"
                     />
@@ -264,6 +266,7 @@ export default defineComponent({
             validate,
             setFieldError,
             resetForm,
+            validateField,
             localCardNumber,
             localCardNumberAttrs,
             localCvv,
@@ -274,12 +277,19 @@ export default defineComponent({
             localExpDateYearAttrs,
         } = useValidation(props);
 
-        const onFocusField = (field) => {
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setFieldError(field, '');
-                })
-            })
+        let blurPromise = null;
+
+        const onFocusField = async (field) => {
+            if (blurPromise) {
+                await blurPromise;
+            }
+            setFieldError(field, '');
+        };
+
+        const onBlurField = async (field) => {
+            blurPromise = validateField(field).then(() => {
+                blurPromise = null;
+            });
         };
 
         const onEnter = () => {
@@ -310,6 +320,7 @@ export default defineComponent({
             localErrors,
             setFieldError,
             resetForm,
+            onBlurField,
             localCardNumber,
             localCardNumberAttrs,
             localCvv,
@@ -334,6 +345,10 @@ export default defineComponent({
         },
         onReset() {
             this.resetForm();
+        },
+        onBlurDateField(event, field) {
+            this.autocompleteDate(event)
+            this.onBlurField(field)
         },
     }
 });

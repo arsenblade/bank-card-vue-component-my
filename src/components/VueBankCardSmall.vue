@@ -70,7 +70,7 @@
                         @focus="onFocusField('localCardNumber')"
                         @keydown.delete="onDel($event, 'cardNumber')"
                         @focusout="leaveFromCardNumber"
-                        @blur="onBlur($event, 'cardNumber')"
+                        @blur="onBlurField('localCardNumber')"
                     />
 
                     <span
@@ -129,8 +129,8 @@
                             v-maska
                             :id="generateId('expDateMonth')"
                             @input="onInput($event, 'expDateMonth')"
-                            @focus="onFocusField('localExpDateMonthAttrs')"
-                            @blur="onBlur($event, 'expDateMonth')"
+                            @focus="onFocusField('localExpDateMonth')"
+                            @blur="onBlurDateField($event, 'localExpDateMonth')"
                             @keydown.delete="onDel($event, 'expDateMonth')"
                         />
 
@@ -159,7 +159,7 @@
                             v-model="localExpDateYear"
                             @input="onInput($event, 'expDateYear')"
                             @focus="onFocusField('localExpDateYear')"
-                            @blur="onBlur($event, 'expDateYear')"
+                            @blur="onBlurDateField($event, 'localExpDateYear')"
                             @keydown.delete="onDel($event, 'expDateYear')"
                         />
                     </div>
@@ -205,6 +205,7 @@
                         :id="generateId('cvv')"
                         @input="onInput($event, 'cvv')"
                         @focus="onFocusField('localCvv')"
+                        @blur="onBlurField('localCvv')"
                         @keydown.delete="onDel($event, 'cvv')"
                     />
 
@@ -276,15 +277,23 @@ export default defineComponent({
             localExpDateMonth,
             localExpDateMonthAttrs,
             localExpDateYear,
+            validateField,
             localExpDateYearAttrs,
         } = useValidation(props);
 
-        const onFocusField = (field) => {
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setFieldError(field, '');
-                })
-            })
+        let blurPromise = null;
+
+        const onFocusField = async (field) => {
+            if (blurPromise) {
+                await blurPromise;
+            }
+            setFieldError(field, '');
+        };
+
+        const onBlurField = async (field) => {
+            blurPromise = validateField(field).then(() => {
+                blurPromise = null;
+            });
         };
 
         function onReset() {
@@ -319,6 +328,7 @@ export default defineComponent({
             localExpDateMonthAttrs,
             localExpDateYear,
             localExpDateYearAttrs,
+            onBlurField,
             onFocusField,
             cvvMask,
         }
@@ -501,7 +511,11 @@ export default defineComponent({
             if (!this.cardNumberCollapsed) {
                 this.onCardNumberEnter();
             }
-        }
+        },
+        onBlurDateField(event, field) {
+            this.autocompleteDate(event)
+            this.onBlurField(field)
+        },
     }
 });
 </script>

@@ -185,15 +185,6 @@ export default {
             }, 0);
         },
         /**
-         * Handle @blur event on input
-         * @param { Object } event
-         * @param { String } type - Unique name of field
-         */
-        onBlur(event, type) {
-            (type === "expDateMonth" || type === "expDateYear") &&
-            this.autocompleteDate(event);
-        },
-        /**
          * Handle @keydown.delete event on input
          * @param { Object } event
          * @param { String } type - Unique name of field

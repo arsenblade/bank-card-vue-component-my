@@ -70,15 +70,19 @@ export const useValidation = (props) => {
 
     const [localCardNumber, localCardNumberAttrs] = defineField('localCardNumber', {
         validateOnModelUpdate: false,
+        validateOnBlur: false,
     });
     const [localExpDateMonth, localExpDateMonthAttrs] = defineField('localExpDateMonth', {
         validateOnModelUpdate: false,
+        validateOnBlur: false,
     });
     const [localExpDateYear, localExpDateYearAttrs] = defineField('localExpDateYear', {
         validateOnModelUpdate: false,
+        validateOnBlur: false,
     });
     const [localCvv, localCvvAttrs] = defineField('localCvv', {
         validateOnModelUpdate: false,
+        validateOnBlur: false,
     });
 
     watch(() => props.cardNumber, (newValue) => {
