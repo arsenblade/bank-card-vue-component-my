@@ -261,7 +261,7 @@ export default defineComponent({
         const {
             values,
             localErrors,
-            handleSubmit,
+            validate,
             setFieldError,
             resetForm,
             localCardNumber,
@@ -282,9 +282,9 @@ export default defineComponent({
             })
         };
 
-        const onEnter = handleSubmit(() => {
-
-        })
+        const onEnter = () => {
+            validate()
+        }
 
         function onReset() {
             resetForm();

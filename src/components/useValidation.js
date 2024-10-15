@@ -24,7 +24,7 @@ const maxYY = computed(() => {
 export const useValidation = (props) => {
     const minYear = props.isYearValidation ? currentYY.value : 0
 
-    const { values, errors: localErrors, defineField, handleSubmit, setFieldError, resetForm } = useForm({
+    const { values, errors: localErrors, defineField, handleSubmit, validate, validateField, setFieldError, resetForm } = useForm({
         initialValues: {
             localCardNumber: props.cardNumber.value,
             localExpDateMonth: props.expDateMonth.value,
@@ -84,9 +84,10 @@ export const useValidation = (props) => {
     return {
         values,
         localErrors,
-        handleSubmit,
         setFieldError,
         resetForm,
+        validate,
+        validateField,
         localCardNumber, localCardNumberAttrs,
         localExpDateMonth, localExpDateMonthAttrs,
         localExpDateYear, localExpDateYearAttrs,

@@ -267,7 +267,6 @@ export default defineComponent({
         const {
             values,
             localErrors,
-            handleSubmit,
             setFieldError,
             resetForm,
             localCardNumber,
@@ -310,7 +309,6 @@ export default defineComponent({
         return {
             values,
             localErrors,
-            handleSubmit,
             setFieldError,
             resetForm,
             localCardNumber,
