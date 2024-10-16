@@ -64,23 +64,23 @@
                     <input
                         v-else
                         type="text"
+                        v-model="localCardNumber"
                         data-cp="cardNumber"
+                        v-maska
                         autocomplete="cc-number"
-                        maxlength="23"
-                        pattern="[ 0-9]*"
                         inputmode="numeric"
                         ref="cardNumber"
                         placeholder="0000 0000 0000 0000"
-                        v-mask="cardNumberMask"
-                        :value="cardNumber"
+                        v-bind="localCardNumberAttrs"
                         class="card__field"
-                        :class="fieldCssClasses('cardNumber')"
+                        :data-maska="cardInfo.numberMask"
+                        :class="{'card__field--invalid': Boolean(localErrors.localCardNumber || errorFiltered('cardNumber'))}"
                         :readonly="!isNew"
                         @input="onInput($event, 'cardNumber')"
-                        @focus="onFocus($event, 'cardNumber')"
-                        @blur="onBlur($event, 'cardNumber')"
+                        @focus="onFocusField('localCardNumber')"
+                        @blur="onBlurField('localCardNumber')"
                         @keydown.delete="onDel($event, 'cardNumber')"
-                        @keydown.enter.prevent="onInputEnter"
+                        @keydown.enter="onEnter"
                     />
 
                     <input
@@ -91,20 +91,20 @@
                     />
 
                     <button
-                        v-if="isNew && !isFieldEmpty('cardNumber')"
+                        v-if="isNew && localCardNumber"
                         class="card__field-icon"
                         @click.prevent.stop="onReset"
                     >
                         <span class="card__field-icon-close"></span>
                     </button>
 
-                    <VueBankCardTooltip :is-show="$v.cardNumber.$error">
+                    <VueBankCardTooltip :is-show="Boolean(localErrors.localCardNumber)">
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
                     <VueBankCardTooltip
-                        :is-show="!!errorFiltered('cardNumber')"
+                        :is-show="Boolean(errorFiltered('cardNumber'))"
                     >
-                        {{ errorFiltered("cardNumber") }}
+                        {{ errorFiltered('cardNumber') }}
                     </VueBankCardTooltip>
                 </div>
             </div>
@@ -129,15 +129,17 @@
                                 inputmode="numeric"
                                 ref="expDateMonth"
                                 placeholder="ММ"
-                                v-mask="expDateMonthMask"
-                                :value="expDateMonth"
-                                :class="fieldCssClasses('expDateMonth')"
+                                v-bind="localExpDateMonthAttrs"
+                                v-maska
+                                data-maska="##"
+                                v-model="localExpDateMonth"
+                                :class="{'card__field--invalid': Boolean(localErrors.localExpDateMonth || errorFiltered('expDateMonth'))}"
                                 class="card__field card__field--extra"
                                 @input="onInput($event, 'expDateMonth')"
-                                @focus="onFocus($event, 'expDateMonth')"
-                                @blur="onBlur($event, 'expDateMonth')"
+                                @focus="onFocusField('localExpDateMonthAttrs')"
+                                @blur="onBlurDateField($event, 'localExpDateMonth')"
                                 @keydown.delete="onDel($event, 'expDateMonth')"
-                                @keydown.enter.prevent="onInputEnter"
+                                @keydown.enter="onEnter"
                             />
                         </div>
 
@@ -158,36 +160,28 @@
                                 inputmode="numeric"
                                 ref="expDateYear"
                                 placeholder="ГГ"
-                                v-mask="expDateYearMask"
-                                :value="expDateYear"
-                                :class="fieldCssClasses('expDateYear')"
+                                v-bind="localExpDateYearAttrs"
+                                v-maska
+                                data-maska="##"
+                                v-model="localExpDateYear"
+                                :class="{'card__field--invalid': Boolean(localErrors.localExpDateYear || errorFiltered('expDateYear'))}"
                                 class="card__field card__field--extra"
                                 @input="onInput($event, 'expDateYear')"
-                                @focus="onFocus($event, 'expDateYear')"
-                                @blur="onBlur($event, 'expDateYear')"
+                                @focus="onFocusField('localExpDateYear')"
+                                @blur="onBlurDateField($event, 'localExpDateYear')"
                                 @keydown.delete="onDel($event, 'expDateYear')"
-                                @keydown.enter.prevent="onInputEnter"
+                                @keydown.enter="onEnter"
                             />
                         </div>
                     </div>
 
-                    <VueBankCardTooltip
-                        :is-show="
-                            $v.expDateMonth.$error || $v.expDateYear.$error
-                        "
-                    >
+                    <VueBankCardTooltip :is-show="localErrors.localExpDateMonth">
                         Введите дату как на карте
                     </VueBankCardTooltip>
                     <VueBankCardTooltip
-                        :is-show="
-                            !!errorFiltered('expDateMonth') ||
-                                !!errorFiltered('expDateYear')
-                        "
+                        :is-show="Boolean(errorFiltered('expDateYear')) || Boolean(errorFiltered('expDateMonth'))"
                     >
-                        {{
-                            errorFiltered("expDateMonth") ||
-                                errorFiltered("expDateYear")
-                        }}
+                        {{ errorFiltered('expDateYear') || errorFiltered('expDateMonth') }}
                     </VueBankCardTooltip>
                 </div>
 
@@ -211,23 +205,24 @@
                         autocomplete="cc-csc"
                         inputmode="numeric"
                         ref="cvv"
-                        v-mask="cvvMask"
-                        :value="cvv"
+                        v-maska
+                        :data-maska="cvvMask"
+                        v-model="localCvv"
                         :placeholder="cardInfo.codeName || 'CVV'"
-                        :class="[...fieldCssClasses('cvv')]"
+                        v-bind="localCvvAttrs"
+                        :class="{'card__field--invalid': Boolean(localErrors.localCvv || errorFiltered('cvv'))}"
                         class="card__field card__field--secured card__field--extra"
                         @input="onInput($event, 'cvv')"
-                        @focus="onFocus($event, 'cvv')"
-                        @blur="onBlur($event, 'cvv')"
+                        @focus="onFocusField('localCvv')"
+                        @blur="onBlurField('localCvv')"
                         @keydown.delete="onDel($event, 'cvv')"
-                        @keydown.enter.prevent="onInputEnter"
+                        @keydown.enter="onEnter"
                     />
 
-                    <VueBankCardTooltip :is-show="$v.cvv.$error">
+                    <VueBankCardTooltip :is-show="localErrors.localCvv">
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
-
-                    <VueBankCardTooltip :is-show="!!errorFiltered('cvv')">
+                    <VueBankCardTooltip :is-show="Boolean(errorFiltered('cvv'))">
                         {{ errorFiltered("cvv") }}
                     </VueBankCardTooltip>
                 </div>
@@ -237,21 +232,19 @@
 </template>
 
 <script>
-import { mask } from "vue-the-mask";
-import { validationMixin } from "vuelidate";
-
-import { commonMixin, validatorsMixin, helpersMixin } from "@/mixins";
+import { commonMixin, helpersMixin } from "@/mixins";
 import VueBankCardTooltip from "./VueBankCardTooltip";
 import VueBankCardBaseHelper from "./VueBankCardBaseHelper";
+import {computed, defineComponent, watch} from "vue";
+import {useValidation} from "./useValidation";
 
-export default {
+export default defineComponent({
     name: "VueBankCardBase",
     components: {
         VueBankCardTooltip,
         VueBankCardBaseHelper
     },
-    directives: { mask },
-    mixins: [commonMixin, validationMixin, validatorsMixin, helpersMixin],
+    mixins: [commonMixin, helpersMixin],
     data() {
         return {
             fields: [
@@ -266,6 +259,81 @@ export default {
     mounted() {
         this.isFocus && this.isNew && this.$refs.cardNumber.focus();
     },
+    setup(props) {
+        const {
+            values,
+            localErrors,
+            validate,
+            setFieldError,
+            resetForm,
+            validateField,
+            localCardNumber,
+            localCardNumberAttrs,
+            localCvv,
+            localCvvAttrs,
+            localExpDateMonth,
+            localExpDateMonthAttrs,
+            localExpDateYear,
+            localExpDateYearAttrs,
+        } = useValidation(props);
+
+        let blurPromise = null;
+
+        const onFocusField = async (field) => {
+            if (blurPromise) {
+                await blurPromise;
+            }
+            setFieldError(field, '');
+        };
+
+        const onBlurField = async (field) => {
+            blurPromise = validateField(field).then(() => {
+                blurPromise = null;
+            });
+        };
+
+        const onEnter = () => {
+            validate()
+        }
+
+        function onReset() {
+            resetForm();
+        }
+        watch(() => props.isReset, () => {
+            onReset()
+        })
+
+        const cvvMask = computed(() => {
+            let mask = "";
+            const maskSymbol = "#";
+            const codeLength = props.cardInfo.codeLength || 3;
+
+            for (let i = 0; i < codeLength; i++) {
+                mask += maskSymbol;
+            }
+
+            return mask;
+        })
+
+        return {
+            values,
+            localErrors,
+            setFieldError,
+            resetForm,
+            onBlurField,
+            localCardNumber,
+            localCardNumberAttrs,
+            localCvv,
+            localCvvAttrs,
+            localExpDateMonth,
+            localExpDateMonthAttrs,
+            localExpDateYear,
+            localExpDateYearAttrs,
+            onFocusField,
+            onEnter,
+            cvvMask,
+        }
+    },
     methods: {
         /**
          * Returns special css property for banks depending by cardInfo
@@ -275,26 +343,15 @@ export default {
         cssPropertySpecial(property) {
             return this.cardInfo.bankName ? this.cardInfo[property] : "";
         },
-        /**
-         * Dynamic CSS classes for fields
-         * @param {String} type - Type of field (see props)
-         * @returns {Array}
-         */
-        fieldCssClasses(type) {
-            return { "card__field--invalid": this.$v[type].$error || this.errorFiltered(type) }
-        },
         onReset() {
             this.resetForm();
         },
-        onInputEnter(event) {
-            if (!this.$v.$invalid) {
-                event.target.blur();
-            }
-            this.$v.$touch();
-            this.$emit("enter", event);
-        }
+        onBlurDateField(event, field) {
+            this.autocompleteDate(event)
+            this.onBlurField(field)
+        },
     }
-};
+});
 </script>
 
 <style lang="scss" scoped>

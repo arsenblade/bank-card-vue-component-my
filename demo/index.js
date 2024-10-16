@@ -1,11 +1,9 @@
-import Vue from "vue";
-import VueBankCard from "../src/index";
-import App from "./App";
+import { createApp } from 'vue'
+import { vMaska } from "maska"
+import App from './App.vue';
 
-Vue.component("VueBankCard", VueBankCard);
+const app = createApp(App)
 
-Vue.config.productionTip = false;
+app.directive('maska', vMaska);
 
-new Vue({
-    render: h => h(App)
-}).$mount("#app");
+app.mount('#app')

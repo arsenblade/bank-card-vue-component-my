@@ -52,10 +52,11 @@
 <script>
 import CardInfo from "@/services/card-info";
 
-import VueBankCardBase from "./VueBankCardBase";
+import {defineComponent} from "vue";
+import VueBankCardBase from "./VueBankCardBase.vue";
 import VueBankCardSmall from "./VueBankCardSmall";
 
-export default {
+export default defineComponent({
     name: "VueBankCard",
     components: {
         VueBankCardBase,
@@ -149,7 +150,7 @@ export default {
             }
         }
     }
-};
+});
 </script>
 
 <style lang="scss" scoped>

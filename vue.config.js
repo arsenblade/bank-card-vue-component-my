@@ -1,5 +1,6 @@
 const os = require("os");
 const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const outputDir = path.resolve(process.env.IS_DEMO ? "dist-demo" : "dist");
 const packageJson = require("./package");
@@ -21,15 +22,19 @@ let buildConfig = {
             });
         }
         // Copy images from ./public to ./dist and ./dist-demo
-        config.plugin("copy").use(require("copy-webpack-plugin"), [
-            [
-                {
-                    from: path.resolve("./public/images"),
-                    to: path.resolve(outputDir, "images"),
-                    toType: "dir",
-                    ignore: [".DS_Store"]
-                }
-            ]
+        config.plugin("copy").use(CopyWebpackPlugin, [
+            {
+                patterns: [
+                    {
+                        from: path.resolve("./public/images"),
+                        to: path.resolve(outputDir, "images"),
+                        toType: "dir",
+                        globOptions: {
+                            ignore: [".DS_Store"], // Теперь используется ключ globOptions для игнорирования файлов
+                        },
+                    },
+                ],
+            },
         ]);
         // Defining env variables
         config.plugin("define").tap(definitions => {

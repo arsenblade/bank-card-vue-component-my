@@ -98,8 +98,14 @@
 </template>
 
 <script>
-export default {
-    name: "App",
+import VueBankCard from "../src/components/VueBankCard.vue";
+import {defineComponent} from "vue";
+
+export default defineComponent({
+    name: 'App',
+    components: {
+        VueBankCard
+    },
     data() {
         return {
             componentVersion: String(
@@ -129,7 +135,7 @@ export default {
             console.log(event);
         }
     }
-};
+});
 </script>
 
 <style lang="scss">

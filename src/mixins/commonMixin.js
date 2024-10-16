@@ -1,6 +1,7 @@
 import { camelToKebab, isObjectEmpty } from "@/utils/helpers";
 import { BRANDS_WITH_MULTIPLE_MASKS } from "@/consts";
-import { getLongestMask, equalToOneMask } from "../utils/helpers";
+import { equalToOneMask } from "../utils/helpers";
+import {maxLengthValueInFields} from "../consts/max-length-value-fields";
 
 export default {
     props: {
@@ -30,6 +31,10 @@ export default {
             type: String,
             required: true,
         },
+        isYearValidation: {
+            type: Boolean,
+            default: true,
+        },
         errors: Object,
         isReset: Boolean,
         isFocus: Boolean,
@@ -51,7 +56,8 @@ export default {
          * @returns { String }
          */
         numberCollapsed() {
-            if (this.isFieldFull("cardNumber")) {
+            const cardNumber = this.cardNumber.replace(/\s+/g, '');
+            if (cardNumber.length >= maxLengthValueInFields.cardNumber) {
                 return this.cardNumber.slice(-4);
             } else {
                 return "";
@@ -80,7 +86,6 @@ export default {
                 const field = e.target.dataset.cp;
                 const value = "0" + e.target.value;
 
-                this[field] = value;
                 this.$emit(`input-${camelToKebab(field)}`, value);
             }
         },
@@ -128,7 +133,7 @@ export default {
             let lengthCondition, orderItemCondition, goToItemIndex;
 
             if (direction === "forward") {
-                lengthCondition = this.isFieldFull(current);
+                lengthCondition = true;
                 orderItemCondition = this.isItemLast(current, this.fields);
                 goToItemIndex = this.itemIndex(current, this.fields) + 1;
             } else if (direction === "backward") {
@@ -145,7 +150,7 @@ export default {
 
                 currentItem.collapsible && (this[`${current}Collapsed`] = true);
                 goToItem.collapsible &&
-                    (this[`${goToItem.ref}Collapsed`] = false);
+                (this[`${goToItem.ref}Collapsed`] = false);
 
                 this.focusOnField(goToItem.ref);
             }
@@ -172,31 +177,12 @@ export default {
                 const validForNextStep =
                     isMultipleMasks && type === "cardNumber"
                         ? countMaskIsEqual
-                        : this.isFieldFull(type) && !this.reseting;
+                        : this.isFieldFull(type, event.target.value) && !this.reseting;
 
                 if (validForNextStep) {
-                    this.moveCaretTo("forward", type);
+                    this.moveCaretTo("forward", type, event.target.value);
                 }
             }, 0);
-        },
-        /**
-         * Handle @focus event on input
-         * @param { Object } event
-         * @param { String } type - Unique name of field
-         */
-        onFocus(event, type) {
-            this.$v[type].$reset();
-            !isObjectEmpty(this.errors) && this.clearErrors(type);
-        },
-        /**
-         * Handle @blur event on input
-         * @param { Object } event
-         * @param { String } type - Unique name of field
-         */
-        onBlur(event, type) {
-            this.$v[type].$touch();
-            (type === "expDateMonth" || type === "expDateYear") &&
-                this.autocompleteDate(event);
         },
         /**
          * Handle @keydown.delete event on input
@@ -205,7 +191,7 @@ export default {
          */
         onDel(event, type) {
             this.$nextTick(() => {
-                this.moveCaretTo("backward", type);
+                this.moveCaretTo("backward", type, event.target.value);
             });
         },
     },
