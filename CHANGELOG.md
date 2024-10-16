@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ## v3.0.0
 
+### Changed
+
 - Upgrade library to vue3
 
 ## v2.0.4
