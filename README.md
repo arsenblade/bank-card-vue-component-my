@@ -14,6 +14,10 @@
 
 **Demonstration is [available here](https://avto-dev.github.io/bank-card-vue-component/).**
 
+## Notification
+
+Currently, two versions of the library are supported - compatible with Vue 2 and Vue 3. Version v2 and below is compatible with Vue 2 applications, version v3 and above is compatible with Vue 3.
+
 ## Installation
 
 ```bash
