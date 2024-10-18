@@ -14,16 +14,18 @@
         @click="onFocusCard"
     >
         <div class="card__avatar" :class="{ 'avatar--border': isNew }">
-            <div
-                class="card__icon"
-                :style="{
+            <div class="card__icon-wrapper">
+                <div
+                    class="card__icon"
+                    :style="{
                     backgroundImage: `url(${avatarIconSrc})`,
                     backgroundColor: cardInfo.bankName
                         ? cardInfo.backgroundColor
                         : '',
                     backgroundSize: cardInfo.bankName ? '80%' : 'contain'
                 }"
-            ></div>
+                ></div>
+            </div>
         </div>
 
         <form
@@ -236,7 +238,7 @@
 </template>
 
 <script>
-import { commonMixin, helpersMixin } from "@/mixins";
+import {commonMixin, helpersMixin} from "@/mixins";
 import clickOutside from "@/utils/click-outside-directive";
 import VueBankCardTooltip from "./VueBankCardTooltip";
 import VueBankCardSmallBtnDel from "@/components/VueBankCardSmallBtnDel";
@@ -249,7 +251,7 @@ export default defineComponent({
         VueBankCardSmallBtnDel,
         VueBankCardTooltip
     },
-    directives: { clickOutside },
+    directives: {clickOutside},
     mixins: [commonMixin, helpersMixin],
     data() {
         return {
@@ -257,10 +259,10 @@ export default defineComponent({
             cardNumberCollapsed: false,
             focusedField: null,
             fields: [
-                { ref: "cardNumber", collapsible: true },
-                { ref: "expDateMonth" },
-                { ref: "expDateYear" },
-                { ref: "cvv" }
+                {ref: "cardNumber", collapsible: true},
+                {ref: "expDateMonth"},
+                {ref: "expDateYear"},
+                {ref: "cvv"}
             ]
         };
     },
@@ -299,6 +301,7 @@ export default defineComponent({
         function onReset() {
             resetForm();
         }
+
         watch(() => props.isReset, () => {
             onReset()
         })
@@ -357,7 +360,7 @@ export default defineComponent({
          */
         avatarIconSrc() {
             const {
-                cardInfo: { bankName, bankLogoSm, brandName, brandLogo }
+                cardInfo: {bankName, bankLogoSm, brandName, brandLogo}
             } = this;
             const cardIcon = "card-icon.svg";
             const dynamicPath = bankName
@@ -376,7 +379,7 @@ export default defineComponent({
             return [
                 "card__number",
                 "card__field-wrapper",
-                { "card__number--collapsed": this.cardNumberCollapsed },
+                {"card__number--collapsed": this.cardNumberCollapsed},
                 {
                     "card__field-wrapper--focused":
                         this.localCardNumber && this.isNew
@@ -386,7 +389,7 @@ export default defineComponent({
                         (this.localErrors.localCardNumber) ||
                         !!this.errorFiltered("cardNumber")
                 },
-                { "card-number_input": !this.cardNumberCollapsed }
+                {"card-number_input": !this.cardNumberCollapsed}
             ];
         },
         /**
@@ -397,7 +400,7 @@ export default defineComponent({
             return [
                 "card__date",
                 "card__field-wrapper",
-                { "card__field-wrapper--hidden": !this.cardNumberCollapsed },
+                {"card__field-wrapper--hidden": !this.cardNumberCollapsed},
                 {
                     "card__field-wrapper--focused":
                         this.localExpDateMonth ||
@@ -421,8 +424,8 @@ export default defineComponent({
                 "card__cvv",
                 "card__field-wrapper",
                 "card__field-wrapper--secured",
-                { "card__field-wrapper--hidden": !this.cardNumberCollapsed },
-                { "card__field-wrapper--focused": this.localCvv },
+                {"card__field-wrapper--hidden": !this.cardNumberCollapsed},
+                {"card__field-wrapper--focused": this.localCvv},
                 {
                     "card__field-wrapper--invalid":
                         this.localErrors.localCvv || !!this.errorFiltered("cvv")
@@ -538,11 +541,11 @@ $base-font-size: 14px;
 
 .card {
     // For implementing outline using box-shadow. This need for support radius corner at Safari
-    --card-outline-color: #{$default-color};
+    --card-outline-color: var(--custom-card-outline-color, #{$default-color});
     --card-outline-width: 0;
 
     --card-border-radius: 5px;
-    --card-border-color: #{$default-color};
+    --card-border-color: var(--custom-card-border-color, #{$default-color});
 
     display: flex;
     flex-wrap: nowrap;
@@ -555,44 +558,44 @@ $base-font-size: 14px;
     box-shadow: 0 0 0 var(--card-outline-width) var(--card-outline-color);
 
     &--hover:hover {
-        --card-border-color: #{$hover-color};
+        --card-border-color: var(--custom-card-border-color-hover, #{$hover-color});
     }
 
     &--saved {
-        --card-border-color: #{$hover-color};
+        --card-border-color: var(--custom-card-border-color-saved, #{$hover-color});
     }
 
     &--error {
-        --card-outline-color: #{$invalid-color};
+        --card-outline-color: var(--custom-card-outline-color-error, #{$invalid-color});
         --card-outline-width: 1px;
-        --card-border-color: #{$invalid-color};
+        --card-border-color: var(--custom-card-border-color-error, #{$invalid-color});
 
         background-color: #ffecec;
     }
 
     &--focused {
-        --card-outline-color: #{$focused-color};
+        --card-outline-color: var(--custom-card-outline-color-focused, #{$focused-color});
         --card-outline-width: 1px;
-        --card-border-color: #{$focused-color};
+        --card-border-color: var(--custom-card-border-color-focused, #{$focused-color});
 
         background-color: #fff;
     }
 
     &--active {
-        --card-outline-color: #067eff;
+        --card-outline-color: var(--custom-card-outline-color-active, #067eff);
         --card-outline-width: 1px;
-        --card-border-color: #067eff;
+        --card-border-color: var(--custom-card-border-color-active, #067eff);
 
         background-color: #fff;
     }
 
     &--invalid {
-        --card-outline-color: #{$invalid-color};
+        --card-outline-color: var(--custom-card-outline-color-invalid, #{$invalid-color});
         --card-outline-width: 1px;
-        --card-border-color: #{$invalid-color};
+        --card-border-color: var(--custom-card-border-color-invalid, #{$invalid-color});
 
         &:hover {
-            --card-border-color: #{$invalid-color};
+            --card-border-color: var(--custom-card-border-color-invalid-hover, #{$invalid-color});
         }
     }
 
@@ -601,23 +604,45 @@ $base-font-size: 14px;
         width: 48px;
         height: 100%;
     }
+
     &__icon {
-        width: 26px;
-        height: 26px;
-        margin: auto;
+        --card-icon-width: var(--custom-card-icon-width, 26px);
+        --card-icon-height: var(--custom-card-icon-height, 26px);
+
+        width: var(--card-icon-width);
+        height: var(--card-icon-height);
         border-radius: 3px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
     }
 
+    &__icon-wrapper {
+        --card-icon-wrapper-width: var(--custom-card-icon-wrapper-width, 26px);
+        --card-icon-wrapper-height: var(--custom-card-icon-wrapper-height, 26px);
+        --card-icon-wrapper-margin: var(--custom-card-icon-wrapper-margin, auto);
+        --card-icon-wrapper-background: var(--custom-card-icon-wrapper-background, transparent);
+        --card-icon-wrapper-border-radius: var(--custom-card-icon-wrapper-border-radius, 0);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--card-icon-wrapper-width);
+        height: var(--card-icon-wrapper-height);
+        margin: var(--card-icon-wrapper-margin);
+        background: var(--card-icon-wrapper-background);
+        border-radius: var(--card-icon-wrapper-border-radius);
+    }
+
     &__main {
+        --card-main-padding: var(--custom-card-main-padding, #{0 16px 0});
+
         position: relative;
         flex-grow: 1;
         display: flex;
         align-items: center;
         margin: -2px;
-        padding: 0 16px 0;
+        padding: var(--card-main-padding);
         border: 1px solid transparent;
         border-top-right-radius: 2px;
         border-bottom-right-radius: 2px;
@@ -678,18 +703,27 @@ $base-font-size: 14px;
         }
 
         &-caption {
+            --card-number-caption-color: var(--custom-card-number-caption-color, #{$base-color});
+            --card-number-caption-font-size: var(--custom-card-number-caption-font-size, $base-font-size);
+            --card-number-caption-line-height: var(--custom-card-number-caption-line-height, 21px);
+            --card-number-caption-secured-font-size: var(--custom-card-number-caption-secured-font-size, $base-font-size);
+            --card-number-caption-secured-line-height: var(--custom-card-number-caption-secured-line-height, auto);
+            --card-number-caption-secured-letter-spacing: var(--custom-card-number-caption-secured-letter-spacing, auto);
+
             display: block;
             height: 100%;
             margin: 0;
             font-family: $field-font-family;
-            font-size: $base-font-size;
-            line-height: 21px;
-            color: $base-color;
+            font-size: var(--card-number-caption-font-size);
+            line-height: var(--card-number-caption-line-height);
+            color: var(--card-number-caption-color);
             white-space: nowrap;
 
             &--secured {
                 font-family: $security-font-family;
-                font-size: 14px;
+                font-size: var(--card-number-caption-secured-font-size);
+                line-height: var(--card-number-caption-secured-line-height);
+                letter-spacing: var(--card-number-caption-secured-letter-spacing);
             }
         }
     }
@@ -713,6 +747,11 @@ $base-font-size: 14px;
     }
 
     &__field {
+        --card-field-color: var(--custom-card-field-color, #{$base-color});
+        --card-field-invalid-color: var(--custom-card-field-invalid-color, #{$invalid-color});
+        --card-field-placeholder-color: var(--custom-card-field-placeholder-color, #{$placeholder-color});
+        --card-field-placeholder-focus-color: var(--custom-card-field-placeholder-focus-color, #{$placeholder-color});
+
         width: 100%;
         height: 100%;
         padding: 0;
@@ -722,26 +761,30 @@ $base-font-size: 14px;
         font-family: $field-font-family;
         font-size: 14px;
         line-height: 1;
-        color: $base-color;
+        color: var(--card-field-color);
 
         &-label {
+            --card-field-label-color: var(--custom-card-field-label-color, #{$base-color});
+
             position: absolute;
             top: 0;
             font-family: $base-font-family;
             font-size: $base-font-size;
             line-height: 17.5px;
-            color: $base-color;
+            color: var(--card-field-label-color);
             font-weight: 400;
             transition: font-size 0.2s, color 0.2s, transform 0.2s;
         }
 
         &-divider {
+            --card-field-divider-color: var(--custom-card-field-divider-color, #{$base-color});
+
             display: block;
             height: 19px;
             font-family: $field-font-family;
             font-size: $base-font-size;
             line-height: 19px;
-            color: $base-color;
+            color: var(--card-field-divider-color);
         }
 
         &-wrapper {
@@ -764,9 +807,11 @@ $base-font-size: 14px;
                 }
 
                 .card__field-label {
+                    --card-field-label-focused-color: var(--custom-card-field-label-focused-color, #{$placeholder-color});
+
                     font-size: 10px;
                     line-height: 15px;
-                    color: $placeholder-color;
+                    color: var(--card-field-label-focused-color);
                     font-weight: 300;
                     white-space: nowrap;
                     transform: translateY(-12px);
@@ -776,10 +821,16 @@ $base-font-size: 14px;
             &--invalid {
                 .card {
                     &__field {
-                        color: $invalid-color;
+                        color: var(--card-field-invalid-color);
 
                         &-divider {
-                            color: $invalid-color;
+                            --card-field-divider-invalid-color: var(--custom-card-field-divider-invalid-color, #{$invalid-color});
+                            color: var(--card-field-divider-invalid-color);
+                        }
+
+                        &-label {
+                            --card-field-label-invalid-color: var(--custom-card-field-label-invalid-color, transparent);
+                            color: var(--card-field-label-invalid-color);
                         }
                     }
                 }
@@ -803,19 +854,22 @@ $base-font-size: 14px;
             font-size: $base-font-size;
             font-family: $base-font-family;
             line-height: 19px;
-            color: $placeholder-color;
+            color: var(--card-field-placeholder-color);
         }
 
         &:focus::placeholder {
-            color: $placeholder-color;
+            color: var(--card-field-placeholder-focus-color);
         }
     }
 }
 
 .avatar--border {
+    --card-avatar-border-height: var(--custom-card-avatar-border-height, 1px);
+    --card-avatar-shadow: var(--custom-card-avatar-shadow, #{0 0 0 var(--card-outline-width) var(--card-outline-color)});
+
     border-radius: var(--card-border-radius) 0 0 var(--card-border-radius);
-    border-right: 1px solid var(--card-border-color);
-    box-shadow: 0 0 0 var(--card-outline-width) var(--card-outline-color);
+    border-right: var(--card-avatar-border-height) solid var(--card-border-color);
+    box-shadow: var(--card-avatar-shadow);
     transition: box-shadow 0.3s;
 }
 

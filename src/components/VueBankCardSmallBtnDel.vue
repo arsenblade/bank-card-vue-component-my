@@ -46,6 +46,10 @@ $field-invalid-outline-color: #ff5959;
     --invalid-color: #f93232;
     --disabled-color: #b7c7dc;
     --fill-svg: var(--field-invalid-outline-color);
+    --vbc-btn-border-height: var(--custom-vbc-btn-border-height, 1px);
+    --vbc-btn-shadow: var(--custom-vbc-btn-shadow, #{0 0 0 var(--card-outline-width) var(--card-outline-color)});
+    --vbc-btn-image-width: var(--custom-vbc-btn-image-width, 16px);
+    --vbc-btn-image-height: var(--custom-vbc-btn-image-height, 16px);
 
     display: flex;
     width: 47px;
@@ -53,8 +57,8 @@ $field-invalid-outline-color: #ff5959;
     padding: 0;
     border: 0;
     border-radius: 0 var(--card-border-radius) var(--card-border-radius) 0;
-    border-left: 1px solid var(--card-border-color);
-    box-shadow: 0 0 0 var(--card-outline-width) var(--card-outline-color);
+    border-left: var(--vbc-btn-border-height) solid var(--card-border-color);
+    box-shadow: var(--vbc-btn-shadow);
     transition: box-shadow 0.3s;
     outline: none;
     background-color: transparent;
@@ -62,8 +66,8 @@ $field-invalid-outline-color: #ff5959;
 
     &__image {
         display: block;
-        width: 16px;
-        height: 16px;
+        width: var(--vbc-btn-image-width);
+        height: var(--vbc-btn-image-height);
         margin: auto;
         fill: var(--fill-svg);
     }
