@@ -231,7 +231,11 @@
             :disable="disableDelete"
             @delete-card="$emit('delete-card', $event)"
             :focused="cardFocused"
-        />
+        >
+            <template v-if="$slots['remove-icon']" #default>
+                <slot name="remove-icon" />
+            </template>
+        </vue-bank-card-small-btn-del>
     </div>
 </template>
 

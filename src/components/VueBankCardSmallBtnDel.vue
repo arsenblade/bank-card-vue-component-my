@@ -5,7 +5,11 @@
         title="Удалить данные карты"
         @click.stop="$emit('delete-card', $event)"
     >
+        <div v-if="$slots.default" class="vbc-btn__image">
+            <slot />
+        </div>
         <svg
+            v-else
             xmlns="http://www.w3.org/2000/svg"
             width="15"
             height="17"

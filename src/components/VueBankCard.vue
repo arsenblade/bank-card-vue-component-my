@@ -46,7 +46,11 @@
             @clear-errors="$emit('clear-errors', $event)"
             @reset="$emit('reset', $event)"
             @delete-card="deleteCard"
-        />
+        >
+            <template v-if="$slots['remove-icon']" #remove-icon>
+                <slot name="remove-icon" />
+            </template>
+        </VueBankCardSmall>
     </article>
 </template>
 
