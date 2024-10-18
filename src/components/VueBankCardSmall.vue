@@ -561,21 +561,24 @@ $base-font-size: 14px;
     --card-outline-color: var(--custom-card-outline-color, #{$default-color});
     --card-outline-width: 0;
 
-    --card-border-radius: 5px;
+    --card-border-radius: var(--custom-card-border-radius, 5px);
+    --card-border-height: var(--custom-card-border-height, 1px);
     --card-border-color: var(--custom-card-border-color, #{$default-color});
 
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
     height: 48px;
-    border: 1px solid var(--card-border-color);
+    border: var(--card-border-height) solid var(--card-border-color);
     border-radius: var(--card-border-radius);
-    background-color: #fff;
+    background-color: var(--custom-card-background-color, #fff);
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 0 0 var(--card-outline-width) var(--card-outline-color);
 
     &--hover:hover {
+        --card-shadow-hover: var(--custom-card-shadow-hover, none);
         --card-border-color: var(--custom-card-border-color-hover, #{$hover-color});
+        box-shadow: var(--card-shadow-hover);
     }
 
     &--saved {
@@ -584,26 +587,26 @@ $base-font-size: 14px;
 
     &--error {
         --card-outline-color: var(--custom-card-outline-color-error, #{$invalid-color});
-        --card-outline-width: 1px;
+        --card-outline-width: var(--custom-card-outline-width-error, 1px);
         --card-border-color: var(--custom-card-border-color-error, #{$invalid-color});
 
-        background-color: #ffecec;
+        background-color: var(--custom-card-background-color-error, #ffecec);
     }
 
     &--focused {
         --card-outline-color: var(--custom-card-outline-color-focused, #{$focused-color});
-        --card-outline-width: 1px;
+        --card-outline-width: var(--custom-card-outline-width-focused, 1px);
         --card-border-color: var(--custom-card-border-color-focused, #{$focused-color});
 
-        background-color: #fff;
+        background-color: var(--custom-card-background-color-focused, #fff);
     }
 
     &--active {
         --card-outline-color: var(--custom-card-outline-color-active, #067eff);
-        --card-outline-width: 1px;
+        --card-outline-width: var(--custom-card-outline-width-active, 1px);
         --card-border-color: var(--custom-card-border-color-active, #067eff);
 
-        background-color: #fff;
+        background-color: var(--custom-card-background-color-active, #fff);
     }
 
     &--invalid {
@@ -618,7 +621,7 @@ $base-font-size: 14px;
 
     &__avatar {
         display: flex;
-        width: 48px;
+        width: var(--custom-card-avatar-width, 48px);
         height: 100%;
     }
 
@@ -638,6 +641,7 @@ $base-font-size: 14px;
 
     &__main {
         --card-main-padding: var(--custom-card-main-padding, #{0 16px 0});
+        --card-main-border-height: var(--custom-card-main-border-height, 1px);
 
         position: relative;
         flex-grow: 1;
@@ -645,7 +649,7 @@ $base-font-size: 14px;
         align-items: center;
         margin: -2px;
         padding: var(--card-main-padding);
-        border: 1px solid transparent;
+        border: var(--card-main-border-height) solid transparent;
         border-top-right-radius: 2px;
         border-bottom-right-radius: 2px;
         transition: border-color 0.3s;
@@ -749,6 +753,7 @@ $base-font-size: 14px;
     }
 
     &__field {
+        --card-field-font-size: var(--custom-card-field-font-size, 14px);
         --card-field-color: var(--custom-card-field-color, #{$base-color});
         --card-field-invalid-color: var(--custom-card-field-invalid-color, #{$invalid-color});
         --card-field-placeholder-color: var(--custom-card-field-placeholder-color, #{$placeholder-color});
@@ -761,7 +766,7 @@ $base-font-size: 14px;
         outline: none;
         background-color: transparent;
         font-family: $field-font-family;
-        font-size: 14px;
+        font-size: var(--card-field-font-size);
         line-height: 1;
         color: var(--card-field-color);
 
@@ -810,9 +815,11 @@ $base-font-size: 14px;
 
                 .card__field-label {
                     --card-field-label-focused-color: var(--custom-card-field-label-focused-color, #{$placeholder-color});
+                    --card-field-label-focused-font-size: var(--custom-card-field-label-focused-font-size, 10px);
+                    --card-field-label-focused-line-height: var(--custom-card-field-label-focused-line-height, 15px);
 
-                    font-size: 10px;
-                    line-height: 15px;
+                    font-size: var(--card-field-label-focused-font-size);
+                    line-height: var(--card-field-label-focused-line-height);
                     color: var(--card-field-label-focused-color);
                     font-weight: 300;
                     white-space: nowrap;
@@ -831,7 +838,7 @@ $base-font-size: 14px;
                         }
 
                         &-label {
-                            --card-field-label-invalid-color: var(--custom-card-field-label-invalid-color, transparent);
+                            --card-field-label-invalid-color: var(--custom-card-field-label-invalid-color, #{$base-color});
                             color: var(--card-field-label-invalid-color);
                         }
                     }
@@ -841,7 +848,7 @@ $base-font-size: 14px;
             &--secured {
                 .card__field {
                     font-family: $security-font-family;
-                    font-size: 14px;
+                    font-size: var(--card-number-caption-secured-font-size);
                 }
             }
 
