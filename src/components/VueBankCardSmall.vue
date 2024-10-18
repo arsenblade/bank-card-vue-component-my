@@ -14,18 +14,16 @@
         @click="onFocusCard"
     >
         <div class="card__avatar" :class="{ 'avatar--border': isNew }">
-            <div class="card__icon-wrapper">
-                <div
-                    class="card__icon"
-                    :style="{
+            <div
+                class="card__icon"
+                :style="{
                     backgroundImage: `url(${avatarIconSrc})`,
                     backgroundColor: cardInfo.bankName
                         ? cardInfo.backgroundColor
                         : '',
                     backgroundSize: cardInfo.bankName ? '80%' : 'contain'
                 }"
-                ></div>
-            </div>
+            ></div>
         </div>
 
         <form
@@ -355,6 +353,21 @@ export default defineComponent({
             return "Номер карты";
         },
         /**
+         * Generate default icon card
+         * @returns { String }
+         */
+        getDefaultIconCard() {
+            if(this.variantDefaultIcon === 'primary') {
+                return 'card-icon-primary.svg'
+            }
+
+            if(this.variantDefaultIcon === 'inverted') {
+                return 'card-icon-inverted.svg'
+            }
+
+            return 'card-icon.svg'
+        },
+        /**
          * Generate path for icon in avatar field
          * @returns { String }
          */
@@ -362,7 +375,7 @@ export default defineComponent({
             const {
                 cardInfo: {bankName, bankLogoSm, brandName, brandLogo}
             } = this;
-            const cardIcon = "card-icon.svg";
+            const cardIcon = this.getDefaultIconCard;
             const dynamicPath = bankName
                 ? bankLogoSm
                 : brandName
@@ -608,30 +621,15 @@ $base-font-size: 14px;
     &__icon {
         --card-icon-width: var(--custom-card-icon-width, 26px);
         --card-icon-height: var(--custom-card-icon-height, 26px);
+        --card-icon-margin: var(--custom-card-icon-margin, auto);
 
         width: var(--card-icon-width);
         height: var(--card-icon-height);
+        margin: var(--card-icon-margin);
         border-radius: 3px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
-    }
-
-    &__icon-wrapper {
-        --card-icon-wrapper-width: var(--custom-card-icon-wrapper-width, 26px);
-        --card-icon-wrapper-height: var(--custom-card-icon-wrapper-height, 26px);
-        --card-icon-wrapper-margin: var(--custom-card-icon-wrapper-margin, auto);
-        --card-icon-wrapper-background: var(--custom-card-icon-wrapper-background, transparent);
-        --card-icon-wrapper-border-radius: var(--custom-card-icon-wrapper-border-radius, 0);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: var(--card-icon-wrapper-width);
-        height: var(--card-icon-wrapper-height);
-        margin: var(--card-icon-wrapper-margin);
-        background: var(--card-icon-wrapper-background);
-        border-radius: var(--card-icon-wrapper-border-radius);
     }
 
     &__main {

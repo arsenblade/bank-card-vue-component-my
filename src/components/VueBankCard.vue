@@ -37,6 +37,7 @@
             :is-focus="isFocus"
             :images-base-path="imagesBasePath"
             :is-year-validation="isYearValidation"
+            :variantDefaultIcon="variantDefaultIcon"
             @input-card-number="cardNumber = $event"
             @input-exp-date-month="expDateMonth = $event"
             @input-exp-date-year="expDateYear = $event"
@@ -100,7 +101,11 @@ export default defineComponent({
         isYearValidation: {
             type: Boolean,
             default: true
-        }
+        },
+        variantDefaultIcon: {
+            type: String,
+            default: 'default',
+        },
     },
     data() {
         return {

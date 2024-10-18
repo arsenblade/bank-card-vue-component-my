@@ -1,4 +1,4 @@
-import { camelToKebab, isObjectEmpty } from "@/utils/helpers";
+import { camelToKebab } from "@/utils/helpers";
 import { BRANDS_WITH_MULTIPLE_MASKS } from "@/consts";
 import { equalToOneMask } from "../utils/helpers";
 import {maxLengthValueInFields} from "../consts/max-length-value-fields";
@@ -34,6 +34,10 @@ export default {
         isYearValidation: {
             type: Boolean,
             default: true,
+        },
+        variantDefaultIcon: {
+            type: String,
+            default: 'default',
         },
         errors: Object,
         isReset: Boolean,
