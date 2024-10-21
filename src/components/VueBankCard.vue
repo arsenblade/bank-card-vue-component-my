@@ -37,6 +37,7 @@
             :is-focus="isFocus"
             :images-base-path="imagesBasePath"
             :is-year-validation="isYearValidation"
+            :variantDefaultIcon="variantDefaultIcon"
             @input-card-number="cardNumber = $event"
             @input-exp-date-month="expDateMonth = $event"
             @input-exp-date-year="expDateYear = $event"
@@ -45,7 +46,11 @@
             @clear-errors="$emit('clear-errors', $event)"
             @reset="$emit('reset', $event)"
             @delete-card="deleteCard"
-        />
+        >
+            <template v-if="$slots['remove-icon']" #remove-icon>
+                <slot name="remove-icon" />
+            </template>
+        </VueBankCardSmall>
     </article>
 </template>
 
@@ -100,7 +105,11 @@ export default defineComponent({
         isYearValidation: {
             type: Boolean,
             default: true
-        }
+        },
+        variantDefaultIcon: {
+            type: String,
+            default: 'default',
+        },
     },
     data() {
         return {

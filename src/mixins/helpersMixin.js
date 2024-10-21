@@ -13,6 +13,10 @@ export default {
             const currentValueLength = value.replace(/\s+/g, '').length;
             const typeFieldValueLength = maxLengthValueInFields[type]
 
+            if(type === 'cardNumber') {
+                return currentValueLength >= typeFieldValueLength
+            }
+
             return currentValueLength === typeFieldValueLength
         },
         /**

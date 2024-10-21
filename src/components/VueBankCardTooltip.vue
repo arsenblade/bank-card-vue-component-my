@@ -55,12 +55,14 @@ $base-font-family: "Roboto", sans-serif;
         }
 
         &-message {
+            --card-tooltip-message-color: var(--custom-tooltip-message-color, #2c303b);
+
             font-family: $base-font-family;
             font-size: 12px;
             line-height: 16px;
             white-space: nowrap;
             font-weight: 300;
-            color: #2c303b;
+            color: var(--card-tooltip-message-color);
         }
 
         &--left {
