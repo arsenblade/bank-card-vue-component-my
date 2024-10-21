@@ -1,7 +1,7 @@
 const cacheClickOutside = "__vueClickOutside__";
 
 export default {
-    bind(el, binding, vNode) {
+    beforeMount(el, binding, vNode) {
         // Validate binding
         if (typeof binding.value !== "function") {
             const compName = vNode.context.name;
@@ -23,7 +23,7 @@ export default {
         document.addEventListener("click", handler);
         document.addEventListener("touchstart", handler);
     },
-    unbind(el) {
+    unmounted(el) {
         document.removeEventListener("click", el[cacheClickOutside]);
         document.removeEventListener("touchstart", el[cacheClickOutside]);
         delete el[cacheClickOutside];

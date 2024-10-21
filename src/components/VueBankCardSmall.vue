@@ -91,7 +91,7 @@
 
                     <VueBankCardTooltip
                         position="left"
-                        :is-show="localErrors.localCardNumber"
+                        :is-show="Boolean(localErrors.localCardNumber)"
                     >
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
@@ -167,7 +167,7 @@
                     <VueBankCardTooltip
                         position="right"
                         :is-show="
-                            localErrors.localExpDateMonth || localErrors.localExpDateYear
+                            Boolean(localErrors.localExpDateMonth || localErrors.localExpDateYear)
                         "
                     >
                         Введите дату в формате ММ/ГГ как на карте
@@ -175,8 +175,8 @@
                     <VueBankCardTooltip
                         position="right"
                         :is-show="
-                            !!errorFiltered('expDateMonth') ||
-                                !!errorFiltered('expDateYear')
+                            Boolean(errorFiltered('expDateMonth') ||
+                                errorFiltered('expDateYear'))
                         "
                     >
                         {{
@@ -210,14 +210,14 @@
                     />
 
                     <VueBankCardTooltip
-                        :is-show="localErrors.localCvv"
+                        :is-show="Boolean(localErrors.localCvv)"
                         position="right"
                     >
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
 
                     <VueBankCardTooltip
-                        :is-show="!!errorFiltered('cvv')"
+                        :is-show="Boolean(errorFiltered('cvv'))"
                         position="right"
                     >
                         {{ errorFiltered("cvv") }}

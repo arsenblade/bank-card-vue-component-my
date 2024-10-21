@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { vMaska } from "maska"
+import { vMaska } from "maska/vue"
 import App from './App.vue';
 
 const app = createApp(App)

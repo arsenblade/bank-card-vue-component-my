@@ -175,7 +175,7 @@
                         </div>
                     </div>
 
-                    <VueBankCardTooltip :is-show="localErrors.localExpDateMonth">
+                    <VueBankCardTooltip :is-show="Boolean(localErrors.localExpDateMonth)">
                         Введите дату как на карте
                     </VueBankCardTooltip>
                     <VueBankCardTooltip
@@ -219,7 +219,7 @@
                         @keydown.enter="onEnter"
                     />
 
-                    <VueBankCardTooltip :is-show="localErrors.localCvv">
+                    <VueBankCardTooltip :is-show="Boolean(localErrors.localCvv)">
                         Вам нужно заполнить это поле
                     </VueBankCardTooltip>
                     <VueBankCardTooltip :is-show="Boolean(errorFiltered('cvv'))">
