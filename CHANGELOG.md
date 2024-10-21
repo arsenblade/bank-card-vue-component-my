@@ -4,7 +4,13 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
-## Unreleased
+## v3.1.0
+
+### Added
+
+- Add css custom props for customize component
+
+- Add custom remove icon
 
 ### Changed
 
