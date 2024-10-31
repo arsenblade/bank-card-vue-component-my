@@ -60,7 +60,6 @@
                         inputmode="numeric"
                         ref="cardNumber"
                         :placeholder="textPlaceholderInput"
-                        v-bind="localCardNumberAttrs"
                         v-maska
                         :data-maska="cardInfo.numberMask"
                         v-model="localCardNumber"
@@ -244,7 +243,7 @@ import {commonMixin, helpersMixin} from "@/mixins";
 import clickOutside from "@/utils/click-outside-directive";
 import VueBankCardTooltip from "./VueBankCardTooltip";
 import VueBankCardSmallBtnDel from "@/components/VueBankCardSmallBtnDel";
-import {computed, defineComponent, watch} from "vue";
+import {computed, defineComponent, ref, watch} from "vue";
 import {useValidation} from "./useValidation";
 
 export default defineComponent({
@@ -258,7 +257,6 @@ export default defineComponent({
     data() {
         return {
             cardFocused: false,
-            cardNumberCollapsed: false,
             focusedField: null,
             fields: [
                 {ref: "cardNumber", collapsible: true},
@@ -295,13 +293,17 @@ export default defineComponent({
         };
 
         const onBlurField = async (field) => {
+            if(field === 'localCardNumber' && !localCardNumber.value) return
+
             blurPromise = validateField(field).then(() => {
                 blurPromise = null;
             });
         };
 
-        function onReset() {
+        const cardNumberCollapsed = ref(false)
+        function onResetLocal() {
             resetForm();
+            cardNumberCollapsed.value = false;
         }
 
         watch(() => props.isReset, () => {
@@ -324,7 +326,6 @@ export default defineComponent({
             values,
             localErrors,
             setFieldError,
-            resetForm,
             localCardNumber,
             localCardNumberAttrs,
             localCvv,
@@ -333,8 +334,10 @@ export default defineComponent({
             localExpDateMonthAttrs,
             localExpDateYear,
             localExpDateYearAttrs,
+            cardNumberCollapsed,
             onBlurField,
             onFocusField,
+            onResetLocal,
             cvvMask,
         }
     },
@@ -474,6 +477,13 @@ export default defineComponent({
         this.isFocus && this.isNew && this.$refs.card.click();
     },
     methods: {
+        /**
+         * Reset form
+         */
+        onReset() {
+            this.onResetLocal();
+            this.resetForm();
+        },
         /**
          * Handle focus on card element
          * @param { Object } e - Event

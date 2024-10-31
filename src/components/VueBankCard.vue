@@ -2,6 +2,7 @@
     <article class="vue-bank-card__wrapper">
         <VueBankCardBase
             v-if="!isSmall"
+            ref="vueBankCardBase"
             :is-new="isNew"
             :card-info="cardInfo"
             :card-number="cardNumber"
@@ -24,6 +25,7 @@
         />
         <VueBankCardSmall
             v-else
+            ref="vueBankCardSmall"
             :is-new="isNew"
             :card-info="cardInfo"
             :card-number="cardNumber"
@@ -57,7 +59,7 @@
 <script>
 import CardInfo from "@/services/card-info";
 
-import {defineComponent} from "vue";
+import {defineComponent, ref} from "vue";
 import VueBankCardBase from "./VueBankCardBase.vue";
 import VueBankCardSmall from "./VueBankCardSmall";
 
@@ -119,6 +121,21 @@ export default defineComponent({
             cvv: "",
             cardHolderName: "CARDHOLDER NAME"
         };
+    },
+    setup() {
+      const vueBankCardSmall = ref();
+      const vueBankCardBase = ref()
+
+      const onReset = () => {
+          vueBankCardSmall.value?.onReset()
+          vueBankCardBase.value?.onReset()
+      }
+
+      return {
+          vueBankCardSmall,
+          vueBankCardBase,
+          onReset
+      }
     },
     methods: {
         deleteCard(event) {
