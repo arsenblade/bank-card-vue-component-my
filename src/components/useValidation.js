@@ -33,7 +33,7 @@ export const useValidation = (props) => {
         },
         validationSchema: toTypedSchema(
             object({
-                localCardNumber: string().required('Вам нужно заполнить это поле'),
+                localCardNumber: string().required('Вам нужно заполнить это поле').min(16, 'Вам нужно заполнить это поле'),
                 localExpDateMonth: string()
                     .required('Введите дату как на карте')
                     .test(

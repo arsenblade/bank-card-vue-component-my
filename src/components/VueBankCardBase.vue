@@ -71,7 +71,6 @@
                         inputmode="numeric"
                         ref="cardNumber"
                         placeholder="0000 0000 0000 0000"
-                        v-bind="localCardNumberAttrs"
                         class="card__field"
                         :data-maska="cardInfo.numberMask"
                         :class="{'card__field--invalid': Boolean(localErrors.localCardNumber || errorFiltered('cardNumber'))}"
@@ -287,6 +286,8 @@ export default defineComponent({
         };
 
         const onBlurField = async (field) => {
+            if(field === 'localCardNumber' && !localCardNumber.value) return
+
             blurPromise = validateField(field).then(() => {
                 blurPromise = null;
             });
@@ -296,11 +297,11 @@ export default defineComponent({
             validate()
         }
 
-        function onReset() {
+        function onResetLocal() {
             resetForm();
         }
         watch(() => props.isReset, () => {
-            onReset()
+            onResetLocal()
         })
 
         const cvvMask = computed(() => {
@@ -319,7 +320,6 @@ export default defineComponent({
             values,
             localErrors,
             setFieldError,
-            resetForm,
             onBlurField,
             localCardNumber,
             localCardNumberAttrs,
@@ -329,6 +329,7 @@ export default defineComponent({
             localExpDateMonthAttrs,
             localExpDateYear,
             localExpDateYearAttrs,
+            onResetLocal,
             onFocusField,
             onEnter,
             cvvMask,
@@ -344,6 +345,7 @@ export default defineComponent({
             return this.cardInfo.bankName ? this.cardInfo[property] : "";
         },
         onReset() {
+            this.onResetLocal();
             this.resetForm();
         },
         onBlurDateField(event, field) {
