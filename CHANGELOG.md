@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v3.2.1
+
+### Fixed
+
+-  Card number collapsed focus
+
 ## v3.2.0
 
 ### Added
