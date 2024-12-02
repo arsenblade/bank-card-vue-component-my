@@ -490,16 +490,17 @@ export default defineComponent({
          */
         onFocusCard(e) {
             this.cardFocused = true;
-            if (this.isNew) {
-                if (e.target.className !== "card__field") {
-                    for (let i = 0; i < this.fields.length; i++) {
-                        const ref = this.fields[i].ref;
 
-                        if (!this.isFieldFull(ref, this[ref])) {
-                            this.focusOnField(ref);
-                            break;
-                        }
-                    }
+            if (!this.isNew || this.cardNumber || e.target.className === "card__field") {
+                return;
+            }
+
+            for (let i = 0; i < this.fields.length; i++) {
+                const ref = this.fields[i].ref;
+
+                if (!this.isFieldFull(ref, this[ref])) {
+                    this.focusOnField(ref);
+                    break;
                 }
             }
         },
