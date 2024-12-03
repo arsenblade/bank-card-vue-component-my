@@ -306,6 +306,11 @@ export default defineComponent({
             cardNumberCollapsed.value = false;
         }
 
+        /**
+         * Generate unique id for labels and inputs
+         * @param { String } id - custom prefix id
+         * @returns { String }
+         */
         function generateId(id) {
             const instance = getCurrentInstance();
             return `${id}-${instance.uid}`;
